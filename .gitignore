@@ -1,0 +1,7 @@
+/.idea/
+/groupPostBot.iml
+/node_modules/
+/pnpm-lock.yaml
+/.wwebjs_cache/
+/.wwebjs_auth/
+/config.json
