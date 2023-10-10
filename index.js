@@ -15,7 +15,7 @@ const headers = {
 const client = new Client({
 	authStrategy: new LocalAuth({ clientId: 'WAPOST' }),
 	puppeteer: {
-		headless: false,
+		headless: true,
 		args: [
 			'--no-sandbox', // Add this option to fix sandbox-related issues in some environments
 			'--disable-setuid-sandbox', // Add this option to fix sandbox-related issues in some environments
