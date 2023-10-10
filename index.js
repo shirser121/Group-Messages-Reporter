@@ -12,21 +12,9 @@ const headers = {
 	Authorization: authorization
 };
 
-//Executable path:
-let executablePath = '';
-if (process.platform === 'linux') {
-	executablePath = '/usr/bin/google-chrome';
-} else if (process.platform === 'win32') {
-	executablePath = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
-} else if (process.platform === 'darwin') {
-	executablePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-}
-
-
 const client = new Client({
 	authStrategy: new LocalAuth({ clientId: 'WAPOST' }),
 	puppeteer: {
-		executablePath,
 		headless: false,
 		args: [
 			'--no-sandbox', // Add this option to fix sandbox-related issues in some environments
