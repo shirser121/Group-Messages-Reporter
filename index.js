@@ -87,5 +87,9 @@ client.on('message', async (msg) => {
 	}
 });
 
+process.on('unhandledRejection', error => {
+	console.log('unhandledRejection', error.message);
+});
+
 
 client.initialize();
