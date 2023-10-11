@@ -5,7 +5,7 @@ const fs = require('fs');
 
 const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 
-const {url, authorization, groupsIds} = config;
+const { url, authorization, groupsIds } = config;
 
 const headers = {
 	'Content-Type': 'application/json', // Set the content type to plain text
@@ -27,7 +27,7 @@ const client = new Client({
 
 
 client.on('qr', qr => {
-	qrcode.generate(qr, {small: true});
+	qrcode.generate(qr, { small: true });
 });
 
 client.on('ready', async () => {
@@ -67,7 +67,7 @@ client.on('message', async (msg) => {
 	console.log("message received");
 	let chat = await msg.getChat();
 
-	if(chat.isGroup && (groupsIds.includes(chat.id._serialized) || groupsIds.length === 0)){
+	if (chat.isGroup && (groupsIds.includes(chat.id._serialized) || groupsIds.length === 0)) {
 		const requestBody = {
 			group_id: chat.id._serialized,
 			group_name: chat.name,
@@ -78,11 +78,14 @@ client.on('message', async (msg) => {
 		console.log(requestBody);
 
 		try {
-			const response = await axios.post(url, requestBody, {headers});
+			const response = await axios.post(url, requestBody, { headers });
 			console.log(response.data);
+			if (response.data.ack_needed) {
+				msg.react('👌');
+			}
 		}
 		catch (error) {
-			console.error('Error:', error?.data);
+			console.error('Error:', error);
 		}
 	}
 });
