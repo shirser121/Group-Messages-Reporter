@@ -73,19 +73,47 @@ client.on('message', async (msg) => {
 			group_name: chat.name,
 			message: msg.body,
 			phone_number: msg.author.replace('@c.us', ''),
+			type: 'message'
 		}
 
-		console.log(requestBody);
-
-		try {
-			const response = await axios.post(url, requestBody, {headers});
-			console.log(response.data);
-		}
-		catch (error) {
-			console.error('Error:', error?.data);
-		}
+		await sendPostRequest(requestBody);
 	}
 });
+
+client.on('group_join', async (notification) => {
+	console.log("group_join");
+	const group = await notification.getChat();
+
+	const amIJoined = notification.recipientIds.includes(client.info.wid._serialized);
+
+	const requestBody = {
+		newMembers: notification.recipientIds.map((member) => member.replace('@c.us', '')),
+		joinOrAdded: notification.type,
+		group_id: notification.chatId,
+		group_name: group.name,
+		amIJoined: amIJoined,
+		allParticipants: group.participants.map((participant) => participant.id.user),
+		type: 'group_join'
+	}
+	await sendPostRequest(requestBody);
+});
+
+
+async function sendPostRequest(requestBody) {
+	console.log(requestBody);
+	try {
+		const response = await axios.post(url, requestBody, {headers});
+		console.log(response.data);
+		return response.data;
+	}
+	catch (error) {
+		console.error('Error:', error?.data);
+		return {
+			status: 'error',
+			error: error?.data
+		}
+	}
+}
 
 process.on('unhandledRejection', error => {
 	console.log('unhandledRejection', error.message);

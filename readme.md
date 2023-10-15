@@ -58,6 +58,36 @@ Alternatively, you can set groupsIds to empty array to listen to all groups.
     - Send a message to any of the groups specified in `config.json`.
     - The bot will forward the message to the API.
 
+
+## 📦 Post Request Format
+
+The bot will send a POST request to the API with the following format:
+
+1. On new message:
+```json
+{
+   "group_id": "GROUP_ID",
+   "message": "MESSAGE",
+   "group_name": "GROUP_NAME",
+   "phone_number": "PHONE_NUMBER",
+   "type": "message"
+}
+```
+
+2. On group member join (the bot or a new member):
+```json
+{
+   "newMembers": ["PHONE_NUMBER1", "PHONE_NUMBER2"],
+   "joinOrAdded": "Indicates if the member joined or was added",
+   "group_id": "GROUP_ID",
+   "group_name": "GROUP_NAME",
+   "amIJoined": "Indicates if the bot joined the group",
+   "allParticipants": ["PHONE_NUMBER1", "PHONE_NUMBER2"],
+   "type": "group_join"
+}
+```
+
+
 ## 🔧 Troubleshooting
 
 - Ensure your phone maintains connection with WhatsApp Web.
