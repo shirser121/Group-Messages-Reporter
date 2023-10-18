@@ -40,7 +40,7 @@ client.on('dialog', async dialog => {
 	await dialog.dismiss()
 });
 
-client.on('error', (event) => {
+client.on('error', () => {
 	client.destroy().then(() => client.initialize());
 	console.log('pupage error... Client is ready again!');
 });
@@ -60,7 +60,7 @@ client.on('change_state', state => {
 
 client.on('disconnected', (reason) => {
 	console.log('Client Disconnected', reason);
-	client.initialize();
+	client.initialize().then();
 });
 
 client.on('message', async (msg) => {
@@ -76,7 +76,10 @@ client.on('message', async (msg) => {
 			type: 'message'
 		}
 
-		await sendPostRequest(requestBody);
+		const resultData = await sendPostRequest(requestBody);
+		if (resultData.react) {
+			await msg.react(resultData.react);
+		}
 	}
 });
 
@@ -126,7 +129,18 @@ client.on('group_membership_request', async (notification) => {
 		group_name: group.name,
 		type: 'group_membership_request'
 	}
-	await sendPostRequest(requestBody);
+	const resultData = await sendPostRequest(requestBody);
+
+	if (resultData.approve) {
+		await client.approveGroupMembershipRequests(notification.chatId, {
+			requesterIds: [notification.author]
+		});
+	}
+	else if (resultData.reject) {
+		await client.rejectGroupMembershipRequests(notification.chatId, {
+			requesterIds: [notification.author]
+		});
+	}
 });
 
 async function sendPostRequest(requestBody) {
