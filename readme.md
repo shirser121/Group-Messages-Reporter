@@ -64,29 +64,64 @@ Alternatively, you can set groupsIds to empty array to listen to all groups.
 The bot will send a POST request to the API with the following format:
 
 1. On new message:
-```json
-{
-   "group_id": "GROUP_ID",
-   "message": "MESSAGE",
-   "group_name": "GROUP_NAME",
-   "phone_number": "PHONE_NUMBER",
-   "type": "message"
-}
-```
+   ```json
+   {
+      "group_id": "GROUP_ID",
+      "message": "MESSAGE",
+      "group_name": "GROUP_NAME",
+      "phone_number": "PHONE_NUMBER",
+      "type": "message"
+   }
+   ```
+   Optional response:
+   ```json
+   {
+      "react": "REACT EMOJI"
+   }
+   ```
 
 2. On group member join (the bot or a new member):
-```json
-{
-   "newMembers": ["PHONE_NUMBER1", "PHONE_NUMBER2"],
-   "joinOrAdded": "Indicates if the member joined or was added",
-   "group_id": "GROUP_ID",
-   "group_name": "GROUP_NAME",
-   "amIJoined": "Indicates if the bot joined the group",
-   "allParticipants": ["PHONE_NUMBER1", "PHONE_NUMBER2"],
-   "type": "group_join"
-}
-```
+   ```json
+   {
+      "newMembers": ["PHONE_NUMBER1", "PHONE_NUMBER2"],
+      "joinOrAdded": "Boolean, indicating if the member joined or was added",
+      "group_id": "GROUP_ID",
+      "group_name": "GROUP_NAME",
+      "amIJoined": "Boolean, indicating if the bot joined the group",
+      "allParticipants": ["PHONE_NUMBER1", "PHONE_NUMBER2"],
+      "type": "group_join"
+   }
+   ```
 
+3. On group member leave (the bot or a member):
+   ```json
+   {
+      "leaveMembers": ["PHONE_NUMBER1", "PHONE_NUMBER2"],
+      "leaveOrKicked": "Boolean, indicating if the member left or was kicked",
+      "group_id": "GROUP_ID",
+      "group_name": "GROUP_NAME",
+      "amILeave": "Boolean, indicating if the bot left the group",
+      "allParticipants": ["PHONE_NUMBER1", "PHONE_NUMBER2"],
+      "type": "group_leave"
+   }
+   ```
+
+4. On group join request (the bot should be an admin):
+   ```json
+   {
+      "group_id": "GROUP_ID",
+      "group_name": "GROUP_NAME",
+      "requester": "PHONE_NUMBER",
+      "type": "group_membership_request"
+   }
+   ```
+   Optional response:
+   ```json
+   {
+      "approve": "Boolean, indicating if the request should be accepted",
+      "reject": "Boolean, indicating if the request should be rejected"
+   }
+   ```
 
 ## 🔧 Troubleshooting
 
