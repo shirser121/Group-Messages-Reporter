@@ -98,6 +98,36 @@ client.on('group_join', async (notification) => {
 	await sendPostRequest(requestBody);
 });
 
+client.on('group_leave', async (notification) => {
+	console.log("group_leave");
+	const group = await notification.getChat();
+
+	const amILeave = notification.recipientIds.includes(client.info.wid._serialized);
+
+	const requestBody = {
+		leaveMembers: notification.recipientIds.map((member) => member.replace('@c.us', '')),
+		leaveOrKicked: notification.type,
+		group_id: notification.chatId,
+		group_name: group.name,
+		amILeave,
+		allParticipants: group.participants.map((participant) => participant.id.user),
+		type: 'group_leave'
+	}
+	await sendPostRequest(requestBody);
+});
+
+client.on('group_membership_request', async (notification) => {
+	console.log("group_membership_request");
+	const group = await notification.getChat();
+
+	const requestBody = {
+		requester: notification.author.replace('@c.us', ''),
+		group_id: notification.chatId,
+		group_name: group.name,
+		type: 'group_membership_request'
+	}
+	await sendPostRequest(requestBody);
+});
 
 async function sendPostRequest(requestBody) {
 	console.log(requestBody);
@@ -120,4 +150,4 @@ process.on('unhandledRejection', error => {
 });
 
 
-client.initialize();
+client.initialize().then();
